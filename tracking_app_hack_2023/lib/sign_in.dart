@@ -3,9 +3,7 @@ import 'package:tracking_app_hack_2023/main.dart';
 import 'package:tracking_app_hack_2023/services/auth_service.dart';
 
 class SignIn extends StatelessWidget {
-
   const SignIn({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +15,13 @@ class SignIn extends StatelessWidget {
         children: [
           const Text('Sign In'),
           ElevatedButton(
-            onPressed: () {
-              AuthService().signInWithGoogle();
+            onPressed: () async {
+              await AuthService().signInWithGoogle();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const OrderTrackingPage(title:"test")),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const OrderTrackingPage(title: "test")),
               );
             },
             child: const Text('Sign In With Google'),

@@ -33,12 +33,29 @@ class OrderTrackingPage extends StatefulWidget {
   State<OrderTrackingPage> createState() => _OrderTrackingPageState();
 }
 
-class _OrderTrackingPageState extends State<OrderTrackingPage> {
+class _OrderTrackingPageState extends State<OrderTrackingPage>
+    with SingleTickerProviderStateMixin {
+  bool loading = true;
+  bool circleLoaded = false;
+  double radius = 70; //* circle radius
+  AnimationController? animationController;
+
   final Completer<GoogleMapController> _controller = Completer();
   static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
   static const LatLng destination = LatLng(37.33429383, -122.06600055);
   Set<LatLng> loc = Set.from([]);
   LocationData? currentLocation;
+
+  //* initial delay
+  _delay() {
+    //* delay before loading map
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () => setState(
+        (() => loading = false),
+      ),
+    );
+  }
 
   void getCurrentLocation() async {
     Location location = Location();
@@ -71,7 +88,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                 newLoc.latitude!,
                 newLoc.longitude!,
               ),
-              radius: 100,
+              radius: radius,
               fillColor: Colors.blue.withOpacity(0.5),
               strokeWidth: 0,
             ),
@@ -90,8 +107,21 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
 
   @override
   void initState() {
+    animationController = AnimationController(
+      vsync: this,
+      duration: (const Duration(milliseconds: 1800)),
+    )..repeat();
+
+    _delay();
     getCurrentLocation();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    //* dispose animations and map here
+    animationController!.dispose();
+    super.dispose();
   }
 
   @override
@@ -100,34 +130,39 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       appBar: AppBar(
         title: Text(widget.title, style: const TextStyle(fontSize: 12)),
       ),
-      body: currentLocation == null
-          ? const Center(child: Text("Loading"))
-          : GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                    currentLocation!.latitude!, currentLocation!.longitude!),
-                zoom: 13.5,
-              ),
-              markers: {
-                Marker(
-                  markerId: const MarkerId("currentLocation"),
-                  position: LatLng(
-                      currentLocation!.latitude!, currentLocation!.longitude!),
-                ),
-                const Marker(
-                  markerId: MarkerId("source"),
-                  position: sourceLocation,
-                ),
-                const Marker(
-                  markerId: MarkerId("destination"),
-                  position: destination,
-                ),
-              },
-              onMapCreated: (mapController) {
-                _controller.complete(mapController);
-              },
-              circles: circles,
-            ),
+      body: AnimatedBuilder(
+        animation: animationController!,
+        builder: (context, child) {
+          return currentLocation == null
+              ? const Center(child: Text("Loading"))
+              : GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(currentLocation!.latitude!,
+                        currentLocation!.longitude!),
+                    zoom: 13.5,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId("currentLocation"),
+                      position: LatLng(currentLocation!.latitude!,
+                          currentLocation!.longitude!),
+                    ),
+                    const Marker(
+                      markerId: MarkerId("source"),
+                      position: sourceLocation,
+                    ),
+                    const Marker(
+                      markerId: MarkerId("destination"),
+                      position: destination,
+                    ),
+                  },
+                  onMapCreated: (mapController) {
+                    _controller.complete(mapController);
+                  },
+                  circles: circles,
+                );
+        },
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [

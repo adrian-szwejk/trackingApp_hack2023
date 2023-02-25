@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "292766929756",
+    "project_id": "trackingapp-378901",
+    "storage_bucket": "trackingapp-378901.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292766929756:android:0fe4d3614f16f56dd6a799",
+        "android_client_info": {
+          "package_name": "com.monkes.trackingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292766929756-a3lutpv5aepknt6ffa3oioqtanqqn7k1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkes.trackingapp",
+            "certificate_hash": "7e2b2adc45983c53ba91c59d4f271aeef67b9502"
+          }
+        },
+        {
+          "client_id": "292766929756-jg1rp7ns824it70aua5i8fssako7l00e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaiIBOCtrWWUNSQhY2s7V50U8nSow75tY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292766929756-jg1rp7ns824it70aua5i8fssako7l00e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

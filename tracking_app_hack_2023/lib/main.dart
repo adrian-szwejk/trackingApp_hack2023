@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'dart:async';
 
+import 'package:tracking_app_hack_2023/sign_in.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const OrderTrackingPage(title: 'Search Team Tracking App'),
+      home: const SignIn(),
     );
   }
 }
@@ -37,7 +39,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     with SingleTickerProviderStateMixin {
   bool loading = true;
   bool circleLoaded = false;
-  double radius = 70; //* circle radius
+  double radius = 40; //* circle radius
   AnimationController? animationController;
 
   final Completer<GoogleMapController> _controller = Completer();

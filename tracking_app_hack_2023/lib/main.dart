@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,6 +21,7 @@ void main() {
 }
 
 //import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 var color = [Colors.blue, Colors.red, Colors.green, Colors.yellow];
 var currColor = Colors.blue;
@@ -40,8 +43,11 @@ class MyApp extends StatelessWidget {
 }
 
 class OrderTrackingPage extends StatefulWidget {
-  const OrderTrackingPage({super.key, required this.title});
+  const OrderTrackingPage({super.key, required this.title, required this.id });
   final String title;
+  final String id;
+
+
 
   @override
   State<OrderTrackingPage> createState() => _OrderTrackingPageState();
@@ -49,6 +55,12 @@ class OrderTrackingPage extends StatefulWidget {
 
 class _OrderTrackingPageState extends State<OrderTrackingPage>
     with SingleTickerProviderStateMixin {
+
+
+  var color = [Colors.blue,Colors.red ,Colors.green,Colors.yellow];
+  var currColor = Colors.blue;
+
+
   bool loading = true;
   bool circleLoaded = false;
   double radius = 20; //* circle radius
@@ -128,14 +140,16 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     )..repeat();
 
     _delay();
+    if(widget.id  == "liaiFt5xfhY7yMaazrhUwuZPYAS2")
+        currColor = color[1];
 
     getCurrentLocation();
     debugPrint("User");
 
-    //inputData();
 
     super.initState();
   }
+
 
   void inputData() async {
     final User user = await firebaseAuth.currentUser!;

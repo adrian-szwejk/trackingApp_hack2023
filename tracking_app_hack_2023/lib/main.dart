@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:tracking_app_hack_2023/sign_in.dart';
 
@@ -101,7 +103,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
                 newLoc.longitude!,
               ),
               radius: radius,
-              fillColor: currColor.withOpacity(0.5),
+              fillColor: currColor.withOpacity(0.8),
               strokeWidth: 0,
             ),
           );

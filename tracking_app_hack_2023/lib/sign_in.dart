@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
 class SignIn extends StatelessWidget {
-
   const SignIn({super.key});
 
   Future<User> inputData() async {
@@ -21,6 +20,7 @@ class SignIn extends StatelessWidget {
     //return user_Uuid;
     // here you write the codes to input the data into firestore
   }
+
 
 
   @override

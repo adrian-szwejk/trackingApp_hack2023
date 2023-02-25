@@ -8,10 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'dart:convert';
+import 'package:flutter/gestures.dart';
 
 import 'package:tracking_app_hack_2023/sign_in.dart';
-final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
+final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
 void main() {
   runApp(const MyApp());
@@ -20,8 +21,8 @@ void main() {
 //import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
-
-
+var color = [Colors.blue, Colors.red, Colors.green, Colors.yellow];
+var currColor = Colors.blue;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -60,10 +61,10 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
 
   bool loading = true;
   bool circleLoaded = false;
-  double radius = 40; //* circle radius
+  double radius = 20; //* circle radius
   AnimationController? animationController;
 
-  final Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller = Completer();
   static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
   static const LatLng destination = LatLng(37.33429383, -122.06600055);
   Set<LatLng> loc = Set.from([]);
@@ -91,17 +92,17 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     location.onLocationChanged.listen(
       (newLoc) {
         currentLocation = newLoc;
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 13.5,
-              target: LatLng(
-                newLoc.latitude!,
-                newLoc.longitude!,
-              ),
-            ),
-          ),
-        );
+        // googleMapController.animateCamera(
+        //   CameraUpdate.newCameraPosition(
+        //     CameraPosition(
+        //       zoom: 0.0,
+        //       target: LatLng(
+        //         newLoc.latitude!,
+        //         newLoc.longitude!,
+        //       ),
+        //     ),
+        //   ),
+        // );
         debugPrint("new location: $newLoc");
         if (!loc.contains(LatLng(newLoc.latitude!, newLoc.longitude!))) {
           circles.add(
@@ -144,10 +145,19 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     debugPrint("User");
 
 
-
     super.initState();
   }
 
+
+  void inputData() async {
+    final User user = await firebaseAuth.currentUser!;
+    user_Uuid = user.uid;
+    //currColor = color[]
+    debugPrint("UserID");
+
+    debugPrint(user_Uuid);
+    // here you write the codes to input the data into firestore
+  }
 
   @override
   void dispose() {
@@ -168,10 +178,19 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
           return currentLocation == null
               ? const Center(child: Text("Loading"))
               : GoogleMap(
+                  mapType: MapType.satellite,
+                  myLocationEnabled: true,
+                  zoomControlsEnabled: true,
+                  compassEnabled: true,
+                  zoomGesturesEnabled: true,
+                  myLocationButtonEnabled: true,
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(currentLocation!.latitude!,
-                        currentLocation!.longitude!),
-                    zoom: 13.5,
+                    zoom: 20.0,
+                    target: LatLng(
+                        double.parse(
+                            currentLocation!.latitude!.toStringAsFixed(5)),
+                        double.parse(
+                            currentLocation!.longitude!.toStringAsFixed(5))),
                   ),
                   markers: {
                     Marker(

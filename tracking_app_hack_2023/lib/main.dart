@@ -4,12 +4,23 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 
 import 'package:tracking_app_hack_2023/sign_in.dart';
+final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
 
 void main() {
   runApp(const MyApp());
 }
+
+//import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+var color = [Colors.blue,Colors.red ,Colors.green,Colors.yellow];
+var currColor = Colors.blue;
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,7 +39,7 @@ class MyApp extends StatelessWidget {
 }
 
 class OrderTrackingPage extends StatefulWidget {
-  const OrderTrackingPage({super.key, required this.title});
+  const OrderTrackingPage({super.key, required this.title });
   final String title;
 
   @override
@@ -91,7 +102,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
                 newLoc.longitude!,
               ),
               radius: radius,
-              fillColor: Colors.blue.withOpacity(0.5),
+              fillColor: currColor.withOpacity(0.5),
               strokeWidth: 0,
             ),
           );
@@ -106,6 +117,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
   }
 
   Set<Circle> circles = Set.from([]);
+  String user_Uuid = "";
 
   @override
   void initState() {
@@ -115,8 +127,25 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     )..repeat();
 
     _delay();
+
     getCurrentLocation();
+    debugPrint("User");
+
+    inputData();
+
+
     super.initState();
+  }
+
+  void inputData() async {
+
+    final User user = await firebaseAuth.currentUser!;
+    user_Uuid = user.uid!;
+    //currColor = color[]
+    debugPrint("UserID");
+
+    debugPrint(user_Uuid);
+    // here you write the codes to input the data into firestore
   }
 
   @override

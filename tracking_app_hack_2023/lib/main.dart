@@ -22,7 +22,6 @@ void main() {
 
 //import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-
 var color = [Colors.blue, Colors.red, Colors.green, Colors.yellow];
 var currColor = Colors.blue;
 
@@ -43,11 +42,9 @@ class MyApp extends StatelessWidget {
 }
 
 class OrderTrackingPage extends StatefulWidget {
-  const OrderTrackingPage({super.key, required this.title, required this.id });
+  const OrderTrackingPage({super.key, required this.title, required this.id});
   final String title;
   final String id;
-
-
 
   @override
   State<OrderTrackingPage> createState() => _OrderTrackingPageState();
@@ -55,11 +52,8 @@ class OrderTrackingPage extends StatefulWidget {
 
 class _OrderTrackingPageState extends State<OrderTrackingPage>
     with SingleTickerProviderStateMixin {
-
-
-  var color = [Colors.blue,Colors.red ,Colors.green,Colors.yellow];
+  var color = [Colors.blue, Colors.red, Colors.green, Colors.yellow];
   var currColor = Colors.blue;
-
 
   bool loading = true;
   bool circleLoaded = false;
@@ -81,6 +75,51 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
         (() => loading = false),
       ),
     );
+  }
+
+  //Send circles to firestore database
+  Future _sendCircles(LatLng l) async {
+    await FirebaseFirestore.instance.collection('circles').add({
+      'color': currColor.toString(),
+      'lat': l.latitude,
+      'long': l.longitude,
+    });
+  }
+
+  //Get all circles from all users in firestore database
+  Future getCircles() async {
+    circles.clear();
+    try {
+      await FirebaseFirestore.instance.collection('circles').get().then(
+        (QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach(
+            (doc) {
+              debugPrint('\ntest\n');
+              debugPrint(doc['color'].substring(35, 45));
+              String col = doc['color'].substring(35, 45);
+              circles.add(
+                Circle(
+                  circleId: CircleId(doc.id),
+                  center: LatLng(
+                    doc['lat'],
+                    doc['long'],
+                  ),
+                  radius: radius,
+                  fillColor: (col == "0xff2196f3")
+                      ? color[0]
+                      : (col == "0xffff0000")
+                          ? color[1]
+                          : ((col == "0xff4caf50") ? color[2] : color[3]),
+                  strokeWidth: 0,
+                ),
+              );
+            },
+          );
+        },
+      );
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   void getCurrentLocation() async {
@@ -105,21 +144,25 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
         //     ),
         //   ),
         // );
-        debugPrint("new location: $newLoc");
-        if (!loc.contains(LatLng(newLoc.latitude!, newLoc.longitude!))) {
+        LatLng l = LatLng(
+            double.parse(currentLocation!.latitude!.toStringAsFixed(4)),
+            double.parse(currentLocation!.longitude!.toStringAsFixed(4)));
+        debugPrint("new location: $l");
+        if (!loc.contains(LatLng(l.latitude, l.longitude))) {
           circles.add(
             Circle(
               circleId: CircleId(circles.length.toString()),
               center: LatLng(
-                newLoc.latitude!,
-                newLoc.longitude!,
+                l.latitude,
+                l.longitude,
               ),
               radius: radius,
               fillColor: currColor.withOpacity(0.8),
               strokeWidth: 0,
             ),
           );
-          loc.add(LatLng(newLoc.latitude!, newLoc.longitude!));
+          loc.add(LatLng(l.latitude, l.longitude));
+          _sendCircles(LatLng(l.latitude, l.longitude));
         }
 
         debugPrint(circles.length.toString());
@@ -140,16 +183,14 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     )..repeat();
 
     _delay();
-    if(widget.id  == "liaiFt5xfhY7yMaazrhUwuZPYAS2")
-        currColor = color[1];
+    if (widget.id == "liaiFt5xfhY7yMaazrhUwuZPYAS2") currColor = color[1];
 
     getCurrentLocation();
     debugPrint("User");
-
+    getCircles();
 
     super.initState();
   }
-
 
   void inputData() async {
     final User user = await firebaseAuth.currentUser!;
@@ -190,9 +231,9 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
                     zoom: 20.0,
                     target: LatLng(
                         double.parse(
-                            currentLocation!.latitude!.toStringAsFixed(5)),
+                            currentLocation!.latitude!.toStringAsFixed(4)),
                         double.parse(
-                            currentLocation!.longitude!.toStringAsFixed(5))),
+                            currentLocation!.longitude!.toStringAsFixed(4))),
                   ),
                   markers: {
                     Marker(

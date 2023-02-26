@@ -54,7 +54,7 @@ class OrderTrackingPage extends StatefulWidget {
 class _OrderTrackingPageState extends State<OrderTrackingPage>
     with SingleTickerProviderStateMixin {
   var color = [Colors.blue, Colors.red, Colors.green, Colors.yellow];
-  var currColor = Colors.blue;
+  var currColor = Colors.green;
 
   bool loading = true;
   bool circleLoaded = false;
@@ -108,7 +108,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
                   radius: radius,
                   fillColor: (col == "0xff2196f3")
                       ? color[0]
-                      : (col == "0xffff0000")
+                      : (col == "0xfff44336")
                           ? color[1]
                           : ((col == "0xff4caf50") ? color[2] : color[3]),
                   strokeWidth: 0,
@@ -267,8 +267,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
             ),
             const Spacer(),
             IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: getCurrentLocation,
+              icon: const Icon(Icons.refresh),
+              onPressed: getCircles,
             ),
           ],
         ),

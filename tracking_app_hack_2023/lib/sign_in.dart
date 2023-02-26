@@ -25,24 +25,6 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        //Instead of using an AppBar widget we use a flexible space to replace the appbar with a widget of our choosing
-        flexibleSpace: Container(
-          //We use DecoratedBox to allow us to use a gradient in the AppBar
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromARGB(255, 5, 116, 23),
-                Color.fromARGB(255, 5, 116, 23),
-              ],
-            ),
-          ),
-        ),
-        title: const Text("ResQ"),
-      ),
       body: Center(
         child: Container(
           decoration: const BoxDecoration(
@@ -54,27 +36,76 @@ class SignIn extends StatelessWidget {
               Color.fromARGB(255, 221, 200, 10),
             ],
           )),
-          child: Center(
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 5, 116, 23)),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
               ),
-              onPressed: () async {
-                await AuthService().signInWithGoogle();
+              Container(
+                height: 150.0,
+                width: 190.0,
+                padding: EdgeInsets.only(top: 40),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(200),
+                ),
+                child: const Center(
+                  child: Text(
+                    "ResQ",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 200,
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    await AuthService().signInWithGoogle();
 
-                final User user = await inputData();
-                final id = user.uid;
+                    final User user = await inputData();
+                    final id = user.uid;
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          OrderTrackingPage(title: "ResQ", id: id)),
-                );
-              },
-              child: const Text('Sign In With Google'),
-            ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              OrderTrackingPage(title: "ResQ", id: id)),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Image.asset(
+                      'assets/images/google-logo.png',
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(3.0),
+                child: const Text(
+                  "Sign in with Google",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
         ),
       ),

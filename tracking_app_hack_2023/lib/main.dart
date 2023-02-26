@@ -54,7 +54,7 @@ class OrderTrackingPage extends StatefulWidget {
 class _OrderTrackingPageState extends State<OrderTrackingPage>
     with SingleTickerProviderStateMixin {
   var color = [Colors.blue, Colors.red, Colors.green, Colors.yellow];
-  var currColor = Colors.green;
+  var currColor = Colors.blue;
 
   bool loading = true;
   bool circleLoaded = false;
@@ -134,17 +134,6 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
     location.onLocationChanged.listen(
       (newLoc) {
         currentLocation = newLoc;
-        // googleMapController.animateCamera(
-        //   CameraUpdate.newCameraPosition(
-        //     CameraPosition(
-        //       zoom: 0.0,
-        //       target: LatLng(
-        //         newLoc.latitude!,
-        //         newLoc.longitude!,
-        //       ),
-        //     ),
-        //   ),
-        // );
         LatLng l = LatLng(
             double.parse(currentLocation!.latitude!.toStringAsFixed(4)),
             double.parse(currentLocation!.longitude!.toStringAsFixed(4)));
@@ -213,9 +202,6 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title, style: const TextStyle(fontSize: 12)),
-      ),
       body: AnimatedBuilder(
         animation: animationController!,
         builder: (context, child) {
@@ -258,21 +244,12 @@ class _OrderTrackingPageState extends State<OrderTrackingPage>
                 );
         },
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: getCircles,
-            ),
-          ],
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: getCircles,
+        tooltip: 'Refresh',
+        child: const Icon(Icons.refresh),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
